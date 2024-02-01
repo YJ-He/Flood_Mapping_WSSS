@@ -17,8 +17,10 @@ The datasets used in this paper can be accessed from [[GoogleDirve]](https://dri
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Calgary-Flood | 2862 | 254 | 800 | 0.2 | 512 × 512 | RGB | Airplane |
 | Huston-Flood | 2560 | 305 | 800 | 0.3 | 512 × 512 | RGB | Airplane |
+
 Calgary-Flood dataset![calgary-flood](./figures/calgary-flood.jpg)
 Huston-Flood dataset![huston-flood](./figures/huston-flood.jpg)
+
 ## Directory Structure
 
 To utilize the code, need to first generate lists of image/label files and place as the structure shown below. Every txt file contains the full absolute path of the files (each file per line). For your convenience, we provide exampled list files of training project for weakly supervised learning in the related datasets [[GoogleDirve]](https://drive.google.com/drive/folders/1pNIfaiHdzeL5-hA0sp8ms4wJTCBiRgLz?usp=sharing) or [[BaiduDisk]](https://pan.baidu.com/s/1GfWQIq3J_XVd0MWLhdKVOA?pwd=r5wa). The image file is the RGB-band image and the label file is the 256-bit image with value from 0 to 255 (0: non-flood pixel, 1:food pixel, 255: unknown pixel).
