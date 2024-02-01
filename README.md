@@ -5,8 +5,8 @@
 This is the official PyTorch implementation of paper: [An Efficient Urban Flood Mapping Framework Towards Disaster Response Driven by Weakly Supervised Semantic Segmentation with Decoupled Training Samples](https://www.sciencedirect.com/science/article/pii/S0924271623003465), which propopsed a novel weakly supervised semantic segmentation framework and an efficient weak training data generation approach for rapid flood mapping from high-resolution aerial imagery in urban areas.
 
 ### Weak training data generation 
-- Weak data from pre-flood river![weak data from pre-flood river](./figures/weak data from pre-flood river.jpg)
-- Weak data from SAM![weak data from SAM](./figures/weak data from SAM.jpg)
+- Weak data from pre-flood river![weak_data1](./figures/weak_data1.jpg)
+- Weak data from SAM![weak_data2](./figures/weak_data2.jpg)
 
 ### Weakly supervised semantic segmentation framework (TFCSD)![TFCSD](./figures/TFCSD.jpg)
 ## Datasets
