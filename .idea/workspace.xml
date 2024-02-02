@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a7a0c615-9b85-4820-8a4e-a78aa255bd8a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/weak data from SAM.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/weak_data2.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/weak data from pre-flood river.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/weak_data1.jpg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +28,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -176,7 +173,7 @@
       <workItem from="1706778117625" duration="48000" />
       <workItem from="1706779231849" duration="14000" />
       <workItem from="1706779266662" duration="34000" />
-      <workItem from="1706779420785" duration="1606000" />
+      <workItem from="1706779420785" duration="2415000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1706780168071</created>
@@ -185,7 +182,21 @@
       <option name="project" value="LOCAL" />
       <updated>1706780168071</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Init">
+      <created>1706781046365</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1706781046365</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Init">
+      <created>1706781129193</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706781129193</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,7 +205,6 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/../../.." />
-      <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <MESSAGE value="Init" />
     <option name="LAST_COMMIT_MESSAGE" value="Init" />
