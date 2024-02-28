@@ -6,7 +6,7 @@ This is the official PyTorch implementation of paper: [An Efficient Urban Flood 
 
 ### Weak training data generation 
 - Weak data from pre-flood river![weak_data1](./figures/weak_data1.jpg)
-- Weak data from SAM![weak_data2](./figures/weak_data2.jpg)
+- Weak data from SAM (Segment Anything Model)![weak_data2](./figures/weak_data2.jpg)
 
 ### Weakly supervised semantic segmentation framework (TFCSD)![TFCSD](./figures/TFCSD.jpg)
 ## Datasets
