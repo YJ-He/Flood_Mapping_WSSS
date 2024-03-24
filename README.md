@@ -70,7 +70,7 @@ To utilize the code, need to first generate lists of image/label files and place
 
 ## Citation
 
-If this repo is useful in your research, please kindly consider citing our paper as follow.
+If this repo is useful in your research, please kindly consider citing our papers as follows.
 
 ```
 @article{he2024efficient,
