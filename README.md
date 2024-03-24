@@ -82,6 +82,13 @@ If this repo is useful in your research, please kindly consider citing our paper
   year={2024},
   publisher={Elsevier}
 }
+@article{he2022enhancement,
+  title={Enhancement of Urban Floodwater Mapping From Aerial Imagery With Dense Shadows via Semi-Supervised Learning},
+  author={He, Yongjun and Wang, Jinfei and Zhang, Ying and Liao, Chunhua},
+  journal={IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},
+  year={2022},
+  publisher={IEEE}
+}
 ```
 
 **If our work give you some insights and hints, star me please! Thank you~**
