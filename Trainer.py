@@ -522,7 +522,7 @@ class Trainer(object):
         """
         resume_path = os.path.join(resume_file)
         print("     + Loading Checkpoint: {} ... ".format(resume_path))
-        checkpoint = torch.load(resume_path)
+        checkpoint = torch.load(resume_path, map_location='cpu')
         self.monitor_best = 0.0
         self.model.load_state_dict(checkpoint['state_dict'], strict=True)
         print("     + Model State Loaded ! :D ")

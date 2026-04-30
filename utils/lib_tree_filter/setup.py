@@ -11,12 +11,10 @@ main_file = glob.glob(os.path.join(extensions_dir, "*.cpp"))
 source_cpu = glob.glob(os.path.join(extensions_dir, "*", "*.cpp"))
 source_cuda = glob.glob(os.path.join(extensions_dir, "*", "*.cu"))
 
-if torch.cuda.is_available():
-    cuda_lib_path = [r'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\bin']
-    sources = source_cpu + source_cuda + main_file
-else:
-    raise Exception('This implementation is only avaliable for CUDA devices.')
+if not torch.cuda.is_available():
+    raise Exception('This implementation requires CUDA. No CUDA device found.')
 
+sources = source_cpu + source_cuda + main_file
 print(sources)
 
 setup(
@@ -28,13 +26,11 @@ setup(
             name='tree_filter_cuda',
             include_dirs=[extensions_dir],
             sources=sources,
-            library_dirs=cuda_lib_path,
             extra_compile_args={
-                                'cxx':['-O3'],
-                                'nvcc':['-O3'],
-                                })
+                'cxx': ['-O3'],
+                'nvcc': ['-O3'],
+            })
     ],
     cmdclass={
         'build_ext': BuildExtension
     })
-

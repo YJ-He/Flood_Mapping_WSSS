@@ -61,7 +61,11 @@ class VGGNet(VGG):
         self.ranges = ranges[model]
 
         if pretrained:
-            exec("self.load_state_dict(models.%s(pretrained=True).state_dict())" % model)
+            try:
+                state_dict = getattr(models, model)(weights='DEFAULT').state_dict()
+            except TypeError:
+                state_dict = getattr(models, model)(pretrained=True).state_dict()
+            self.load_state_dict(state_dict)
 
         if not requires_grad:
             for param in super().parameters():

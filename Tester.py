@@ -224,7 +224,7 @@ class Tester(object):
 
     def _resume_ckpt(self):
         print("     + Loading ckpt path : {} ...".format(self.resume_ckpt_path))
-        checkpoint = torch.load(self.resume_ckpt_path)
+        checkpoint = torch.load(self.resume_ckpt_path, map_location='cpu')
         self.model.load_state_dict(checkpoint['state_dict'], strict=False)
         print("     + Model State Loaded ! :D ")
         print("     + Checkpoint file: '{}' , Loaded ! \n"
@@ -238,7 +238,7 @@ class Tester(object):
         for index, map in enumerate(binary_map):
             map = np.asarray(map.cpu(), dtype=np.uint8) * 255
             map = Image.fromarray(map)
-            filename = filenames[index].split('\\')[-1].split('.')
+            filename = os.path.basename(filenames[index]).split('.')
             save_filename = filename[0] + '_binary.tif'
             save_path = os.path.join(self.predict_path, save_filename)
             map.save(save_path, compression='tiff_lzw')

@@ -111,6 +111,27 @@ class MyConfiguration():
         return self.config.getint("Data", "eval_size")
 
     @property
+    def img_mean(self):
+        try:
+            return self.config.get("Data", "img_mean")
+        except Exception:
+            return ''
+
+    @property
+    def img_std(self):
+        try:
+            return self.config.get("Data", "img_std")
+        except Exception:
+            return ''
+
+    @property
+    def data_format(self):
+        try:
+            return self.config.get("Data", "data_format")
+        except Exception:
+            return 'list'
+
+    @property
     def use_gpu(self):
         return self.config.getboolean("General", "use_gpu")
 
