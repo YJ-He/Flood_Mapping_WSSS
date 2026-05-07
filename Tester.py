@@ -224,7 +224,7 @@ class Tester(object):
 
     def _resume_ckpt(self):
         print("     + Loading ckpt path : {} ...".format(self.resume_ckpt_path))
-        checkpoint = torch.load(self.resume_ckpt_path, map_location='cpu')
+        checkpoint = torch.load(self.resume_ckpt_path, map_location='cpu', weights_only=False)
         self.model.load_state_dict(checkpoint['state_dict'], strict=False)
         print("     + Model State Loaded ! :D ")
         print("     + Checkpoint file: '{}' , Loaded ! \n"
