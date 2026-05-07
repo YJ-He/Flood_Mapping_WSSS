@@ -7,6 +7,8 @@ import tifffile
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 
+_ALBU_V2 = tuple(int(x) for x in A.__version__.split('.')[:2]) >= (2, 0)
+
 
 class FloodDatasetTiff(Dataset):
     """Dataset for multi-band TIFF images with PNG labels.
@@ -75,7 +77,8 @@ class FloodDatasetTiff(Dataset):
             A.RandomScale(scale_limit=(-0.5, 1.0), interpolation=cv2.INTER_LINEAR, p=1.0),
             A.PadIfNeeded(
                 min_height=crop_h, min_width=crop_w,
-                border_mode=cv2.BORDER_CONSTANT, value=0, mask_value=255),
+                border_mode=cv2.BORDER_CONSTANT,
+                **(dict(fill=0, fill_mask=255) if _ALBU_V2 else dict(value=0, mask_value=255))),
             A.RandomCrop(height=crop_h, width=crop_w),
             A.HorizontalFlip(p=0.5),
         ]

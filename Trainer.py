@@ -192,13 +192,17 @@ class Trainer(object):
         assert self.start_epoch < epochs
 
         for epoch in range(self.start_epoch, epochs + 1):
+            # display current lr before training
+            for param_group in self.optimizer.param_groups:
+                self.current_lr = param_group['lr']
+
             train_log = self._train_epoch(epoch)
             eval_log = self._eval_epoch(epoch)
 
             if not self.config.use_one_cycle_lr:
                 # lr update
                 if self.lr_scheduler is not None:
-                    self.lr_scheduler.step(epoch)
+                    self.lr_scheduler.step()
                     for param_group in self.optimizer.param_groups:
                         self.current_lr = param_group['lr']
 
@@ -240,6 +244,10 @@ class Trainer(object):
         assert self.start_epoch < epochs
 
         for epoch in range(self.start_epoch, epochs + 1):
+            # display current lr before training
+            for param_group in self.optimizer.param_groups:
+                self.current_lr = param_group['lr']
+
             # get log information of train and evaluation phase
             train_log = self._train_epoch_TFCSD(epoch)
             eval_log = self._eval_epoch(epoch)
@@ -247,7 +255,7 @@ class Trainer(object):
             if not self.config.use_one_cycle_lr:
                 # lr update
                 if self.lr_scheduler is not None:
-                    self.lr_scheduler.step(epoch)
+                    self.lr_scheduler.step()
                     for param_group in self.optimizer.param_groups:
                         self.current_lr = param_group['lr']
 
