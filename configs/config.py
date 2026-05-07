@@ -205,6 +205,13 @@ class MyConfiguration():
         return self.config.getboolean("Train", "use_one_cycle_lr")
 
     @property
+    def use_warmup_poly_lr(self):
+        try:
+            return self.config.getboolean("Train", "use_warmup_poly_lr")
+        except Exception:
+            return False
+
+    @property
     def temperature(self):
         return self.config.getfloat("Train", "temperature")
 

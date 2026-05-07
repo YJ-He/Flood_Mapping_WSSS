@@ -2,6 +2,7 @@ import os
 import numpy as np
 from torch.utils.data import Dataset
 from PIL import Image
+import cv2
 import tifffile
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
@@ -10,10 +11,12 @@ from albumentations.pytorch import ToTensorV2
 class FloodDatasetTiff(Dataset):
     """Dataset for multi-band TIFF images with PNG labels.
 
-    Reads from directory structure:
-        {root}/{train,val,test}/{images,labels}/
-    Images: multi-band .tif files loaded via tifffile
-    Labels: single-channel .png files with values 0 (background) and 1 (flood)
+    Matches the mmseg data pipeline:
+      Train: RandomResize(0.5~2.0) -> RandomCrop -> HorizontalFlip -> Normalize
+      Test:  Resize(eval_size) -> Normalize
+
+    Normalization uses (img - mean) / std on raw float32 pixel values,
+    identical to mmseg SegDataPreProcessor.
     """
 
     def __init__(self, config, args, subset):
@@ -65,28 +68,31 @@ class FloodDatasetTiff(Dataset):
         img = img.astype(np.float32)
         return img
 
-    def _get_transforms(self, is_train):
-        tfms = []
-        if is_train:
-            size = self.config.input_size
-            tfms.extend([
-                A.Resize(size, size),
-                A.HorizontalFlip(p=0.5),
-                A.VerticalFlip(p=0.5),
-                A.RandomRotate90(p=0.5),
-                A.Transpose(p=0.5),
-            ])
-        else:
-            size = self.config.eval_size
-            tfms.append(A.Resize(size, size))
-
+    def _get_train_transforms(self):
+        crop_h = self.config.input_size
+        crop_w = self.config.input_size
+        tfms = [
+            A.RandomScale(scale_limit=(-0.5, 1.0), interpolation=cv2.INTER_LINEAR, p=1.0),
+            A.PadIfNeeded(
+                min_height=crop_h, min_width=crop_w,
+                border_mode=cv2.BORDER_CONSTANT, value=0, mask_value=255),
+            A.RandomCrop(height=crop_h, width=crop_w),
+            A.HorizontalFlip(p=0.5),
+        ]
         if self.img_mean is not None and self.img_std is not None:
             tfms.append(A.Normalize(
-                mean=self.img_mean,
-                std=self.img_std,
-                max_pixel_value=1.0,
-            ))
+                mean=self.img_mean, std=self.img_std, max_pixel_value=1.0))
+        tfms.append(ToTensorV2())
+        return A.Compose(tfms)
 
+    def _get_test_transforms(self):
+        size = self.config.eval_size
+        tfms = [
+            A.Resize(height=size, width=size, interpolation=cv2.INTER_LINEAR),
+        ]
+        if self.img_mean is not None and self.img_std is not None:
+            tfms.append(A.Normalize(
+                mean=self.img_mean, std=self.img_std, max_pixel_value=1.0))
         tfms.append(ToTensorV2())
         return A.Compose(tfms)
 
@@ -94,7 +100,7 @@ class FloodDatasetTiff(Dataset):
         image = self._load_tiff(self.data_list[index])
 
         is_train = (self.subset == 'train' and not self.args.is_test)
-        transform = self._get_transforms(is_train)
+        transform = self._get_train_transforms() if is_train else self._get_test_transforms()
 
         if not self.args.only_prediction:
             label_path = self.target_list[index]

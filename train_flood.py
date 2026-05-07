@@ -55,7 +55,7 @@ def main(config, args):
     model = FCN_backbone.FCNs_VGG_ASPP_4conv1(
         config.input_channel, out_channel,
         backbone='vgg16_bn',
-        pretrained=(config.input_channel == 3))
+        pretrained=False)
 
     if hasattr(model, 'name'):
         config.config.set("Directory", "model_name", model.name)

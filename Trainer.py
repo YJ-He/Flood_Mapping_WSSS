@@ -108,6 +108,8 @@ class Trainer(object):
 
         if self.config.use_one_cycle_lr:
             self.lr_scheduler = self._lr_scheduler_onecycle(self.optimizer)
+        elif self.config.use_warmup_poly_lr:
+            self.lr_scheduler = self._lr_scheduler_warmup_poly(self.optimizer, last_epoch=self.start_epoch - 1)
         else:
             self.lr_scheduler = self._lr_scheduler_lambda(self.optimizer, last_epoch=self.start_epoch - 1)
 
@@ -162,6 +164,17 @@ class Trainer(object):
         lambda1 = lambda epoch: pow((1 - ((epoch - 1) / self.config.epochs)), 0.9)
         lr_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda1, last_epoch=last_epoch)
 
+        return lr_scheduler
+
+    def _lr_scheduler_warmup_poly(self, optimizer, last_epoch):
+        warmup_epochs = 5
+        total_epochs = self.config.epochs
+        def warmup_poly_lambda(epoch):
+            if epoch < warmup_epochs:
+                return 1e-6 + (1.0 - 1e-6) * epoch / warmup_epochs
+            else:
+                return max(0.0, 1.0 - (epoch - warmup_epochs) / (total_epochs - warmup_epochs))
+        lr_scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=warmup_poly_lambda, last_epoch=last_epoch)
         return lr_scheduler
 
     def _loss_js_div(self, p_output, q_output, get_softmax=True):
