@@ -8,7 +8,6 @@ import torch.nn.functional as F
 
 import utils.util
 from utils.util import AverageMeter, ensure_dir
-from utils import TreeEnergyLoss
 from tqdm import tqdm
 from utils.metrics import Evaluator_tensor
 from torch.cuda.amp import autocast
@@ -375,6 +374,7 @@ class Trainer(object):
 
         self.evaluator.reset()
         scaler = grad_scaler.GradScaler()
+        from utils import TreeEnergyLoss
         L_TEL = TreeEnergyLoss.TreeEnergyLoss(sigma=self.config.sigma)
         L_seg = nn.CrossEntropyLoss(ignore_index=255)
         T = self.config.temperature
