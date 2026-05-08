@@ -132,6 +132,27 @@ class MyConfiguration():
             return 'list'
 
     @property
+    def test_size(self):
+        try:
+            return self.config.getint("Data", "test_size")
+        except Exception:
+            return self.eval_size
+
+    @property
+    def slide_crop_size(self):
+        try:
+            return self.config.getint("Data", "slide_crop_size")
+        except Exception:
+            return 0
+
+    @property
+    def slide_stride(self):
+        try:
+            return self.config.getint("Data", "slide_stride")
+        except Exception:
+            return 0
+
+    @property
     def use_gpu(self):
         return self.config.getboolean("General", "use_gpu")
 

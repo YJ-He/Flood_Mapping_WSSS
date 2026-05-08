@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 import numpy as np
 import os
 import time
@@ -77,6 +78,48 @@ class Tester(object):
 
         self.evaluator = Evaluator_tensor(self.config.nb_classes, self.device)
 
+        self.use_slide = self.config.slide_crop_size > 0
+        if self.use_slide:
+            print(f"     + Slide inference: crop={self.config.slide_crop_size}, "
+                  f"stride={self.config.slide_stride}, test_size={self.config.test_size}")
+
+    def _slide_inference(self, images):
+        """Sliding window inference matching mmseg slide mode."""
+        B, C, H, W = images.shape
+        crop_h = crop_w = self.config.slide_crop_size
+        stride_h = stride_w = self.config.slide_stride
+        num_classes = self.config.nb_classes
+
+        h_grids = max(H - crop_h + stride_h - 1, 0) // stride_h + 1
+        w_grids = max(W - crop_w + stride_w - 1, 0) // stride_w + 1
+
+        preds = images.new_zeros((B, num_classes, H, W))
+        count = images.new_zeros((B, 1, H, W))
+
+        for h_idx in range(h_grids):
+            for w_idx in range(w_grids):
+                y1 = h_idx * stride_h
+                x1 = w_idx * stride_w
+                y2 = min(y1 + crop_h, H)
+                x2 = min(x1 + crop_w, W)
+                y1 = max(y2 - crop_h, 0)
+                x1 = max(x2 - crop_w, 0)
+
+                crop = images[:, :, y1:y2, x1:x2]
+                output = self.model(crop)
+                preds[:, :, y1:y2, x1:x2] += output["logits1"]
+                count[:, :, y1:y2, x1:x2] += 1
+
+        return preds / count
+
+    def _forward(self, images):
+        """Forward pass with optional slide inference."""
+        if self.use_slide:
+            return self._slide_inference(images)
+        else:
+            output = self.model(images)
+            return output["logits1"]
+
     def eval_and_predict(self):
         self._resume_ckpt()
         self.evaluator.reset()
@@ -91,18 +134,18 @@ class Tester(object):
             for steps, (images, target, filenames) in tqdm(enumerate(self.test_data_loader, start=1)):
                 images = images.to(self.device, non_blocking=True)
                 target = target.to(self.device, non_blocking=True)
-                output = self.model(images)
+                logits = self._forward(images)
+
                 if self.config.loss == 'bceloss':
-                    logits = torch.squeeze(output["logits1"], 1)
-                    probability = torch.sigmoid(logits)
+                    logits = torch.squeeze(logits, 1)
+                    target_loss = target
                 elif self.config.loss == 'crossentropy':
-                    logits = output["logits1"]
+                    target_loss = target.long()
 
-                    target = target.long()
-
-                loss = L_seg(logits, target)
+                loss = L_seg(logits, target_loss)
 
                 if self.config.loss == 'bceloss':
+                    probability = torch.sigmoid(logits)
                     probability[probability < 0.5] = 0
                     probability[probability >= 0.5] = 1
                     self._save_pred(probability, filenames)
@@ -112,7 +155,7 @@ class Tester(object):
                     self._save_pred(pred, filenames)
                     pred = pred.view(-1).long()
 
-                label = target.view(-1).long()
+                label = target_loss.view(-1).long()
 
                 self.evaluator.add_batch(label, pred)
 
@@ -213,11 +256,9 @@ class Tester(object):
         self.model.eval()
         with torch.no_grad():
             for steps, (images, filenames) in tqdm(enumerate(self.test_data_loader, start=1)):
-                # images
                 images = images.to(self.device, non_blocking=True)
-                output = self.model(images)
-
-                pred = torch.argmax(output["logits1"], dim=1)
+                logits = self._forward(images)
+                pred = torch.argmax(logits, dim=1)
                 self._save_pred(pred, filenames)
             print("Predicting and Saving Done!\n")
 

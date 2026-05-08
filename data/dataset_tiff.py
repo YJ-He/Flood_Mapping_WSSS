@@ -89,7 +89,7 @@ class FloodDatasetTiff(Dataset):
         return A.Compose(tfms)
 
     def _get_test_transforms(self):
-        size = self.config.eval_size
+        size = self.config.test_size if self.subset == 'test' else self.config.eval_size
         tfms = [
             A.Resize(height=size, width=size, interpolation=cv2.INTER_LINEAR),
         ]
